@@ -1,0 +1,149 @@
+/// Single Read
+
+1 START
+2 FUNCTION singleDBG
+3     Pass In: sequence,k
+4     combination <-[]
+5     graph <-[]
+6     FOR seq in sequence:  
+7         combination.append(seq[0:k-1])
+8         combination.append(seq[1:k])
+9     ENDFOR
+10    FOR i in range (0 TO len(combination)-1,2
+11         graph.append([combination[i], combination[i+1]])
+12    ENDFOR
+13     Pass out: graph
+14 ENDFUNCTION
+15 
+16 
+17 FUNCTION  single_findStartPoint
+18     Pass In: graph 
+19     tmp_tofind_startpoint <-[]
+20     FOR i in range (len(graph)):
+21         tmp_tofind_startpoint.append(graph[i][1])  
+22     ENDFOR          
+23     Pass Out : tmp_tofind_startpoint
+24 ENDFUNCTION
+25 
+26 
+27 FUNCTION  singlePath
+28     Pass In: graph,tmp_tofind_startpoint
+29     path <-[]
+30     FOR i 0 in len(graph) - 1
+31         IF (graph[i][0] not in tmp_tofind_startpoint)     
+32             THEN
+33             path.insert(0, graph[i][0])                   
+34             path.insert(1, graph[i][1])                    
+35             z <-i                                          
+36         ENDIF
+37     ENDFOR
+38     FOR l in graph:                                          
+39         FOR j in range(len(graph)):                        
+40             IF (graph[z][1] = graph[j][0])
+41                 THEN
+42                 path.append(graph[j][1])
+43                 z <-j
+44             ENDIF
+45         ENDFOR
+46	ENDFOR
+47     
+48     Pass Out : path
+49 ENDFUNCTION
+50 
+51 
+52 FUNCTION  createsinglegenome
+53     Pass In: path,k
+54     genome <-[]                         
+55     genome.insert(0,path[0])           
+56     FOR i in range (1,len(path)       
+57         genome.append(path[i][k-2])     
+58     ENDFOR
+59     wholegenome <-''.join(genome)       
+60     Pass Out: wholegenome
+61 ENDFUNCTION
+62 END
+
+
+______________________________________________________________________________________________________________________________________
+/// Pair Read
+
+1 START
+2 FUNCTION  pairDBG
+3     Pass In: sequence,k
+4     combination <-[]
+5 
+7     FOR seq in sequence: 
+8         combination.append(seq[0:k-1])                                 
+9         combination.append(seq[k:k+k-1])
+10         combination.append(seq[1:k])
+11         combination.append(seq[k+1:k+k])
+12    ENDFOR
+13     graph <-[list(combination[i: i + 2]) FOR i 0 in 0, len(combination), 2)]   
+14                                                                                    
+15     Graph <-[list(graph[i: i + 2]) FOR i 0 in 0, len(graph), 2)]               
+16     
+17     Pass out: graph
+18 
+19 ENDFUNCTION
+20 
+21 
+22 
+23 FUNCTION  pair_findStartPoint
+24     Pass In: graph
+25     tmp_tofind_startpoint <-[]
+26     FOR i in range (len(graph)):
+27         tmp_tofind_startpoint.append(graph[i][1])
+28     ENDFOR                     
+29     Pass Out: tmp_tofind_startpoint
+30     
+31 ENDFUNCTION
+32 
+33 FUNCTION  pairPath
+34     Pass In: graph,tmp_tofind_startpoint
+35     path <-[]
+36 
+37     FOR i 0 in len(graph) - 1
+38         IF (graph[i][0] not in tmp_tofind_startpoint)              
+39             THEN
+40             path.insert(0, graph[i][0])                              
+41             path.insert(1, graph[i][1])                              
+42             z <-i                                                  
+43                                                                      
+44         ENDIF
+45	ENDFOR
+46     FOR l in graph:                                     
+47         FOR j in range(len(graph)):
+48             IF (graph[z][1] = graph[j][0])
+49                 THEN
+50                 path.append(graph[j][1])
+51                 z <-j
+52             ENDIF
+53	   ENDFOR
+54      ENDFOR
+55    Pass Out: path	
+56 ENDFUNCTION
+58 
+59 FUNCTION  createpairgenome
+60     Pass In: path,k,gap
+61     prefix <-[]  
+61     suffix <-[] 
+62 
+63 
+64     FOR i in range (0,len(path)-1
+65         prefix.append(path[i][0][0])              
+66     ENDFOR
+
+67     prefix.append(path[len(path)-1][0])           
+68     prefix <-''.join(prefix)                      
+69 
+70     FOR i in range (0,len(path)-1
+71         suffix.append(path[i][1][0])               
+72     ENDFOR
+73     suffix.append(path[len(path)-1][1])            
+74     suffix <-''.join(suffix)                       
+75 
+76     suffixlastindex <-k+gap                            
+77     wholegenome <-prefix + suffix[-suffixlastindex:]  
+78     Pass Out: wholegenome
+79 ENDFUNCTION
+80 END
